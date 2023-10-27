@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Loan Prepayment Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .calculator-container {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px #000000;
+        }
+
+        h2{
+            text-align: center;
+        }
+
+        .input-container {
+            margin: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h2><u>Home Loan Prepayment Calculator</u></h2>
+        <div class="input-container">
+            <label for="loan-amount">Loan Amount :</label>
+            <input type="number" id="loan-amount" required value="2280756">
+        </div>
+        <div class="input-container">
+            <label for="interest-rate">Interest Rate (%):</label>
+            <input type="number" id="interest-rate" step="0.01" required value="9.45">
+        </div>
+        <div class="input-container">
+            <label for="loan-term">Loan Term (months) :</label>
+            <input type="number" id="loan-term" required value="210">
+        </div>
+        <div class="input-container">
+            <label for="monthly-payment">Current Monthly Payment :</label>
+            <input type="number" id="monthly-payment" required value="25000">
+        </div>
+        <div class="input-container">
+            <label for="extra-payment">Extra Monthly Payment :</label>
+            <input type="number" id="extra-payment" required value="0">
+        </div>
+        <div class="input-container">
+            <label for="yearly-increment">Yearly Extra Payment Increment :</label>
+            <input type="number" id="yearly-increment" required value="0">
+        </div>
+        <div class="input-container">
+            <label for="yearly-increment">Yearly Extra Amount Lumpsum :</label>
+            <input type="number" id="yearly-extra-payment" required value="0">
+        </div>
+        <button onclick="calculate()">Calculate</button>
+        <div class="result" id="result2"></div>
+        <div class="result" id="result1"></div>
+        
+    </div>
+    <script>
+        function calculate() {
+            const loanAmount = parseFloat(document.getElementById("loan-amount").value);
+            const interestRate = parseFloat(document.getElementById("interest-rate").value) / 100;
+            const loanTerm = parseInt(document.getElementById("loan-term").value);
+            const monthlyPayment = parseFloat(document.getElementById("monthly-payment").value);
+            let extraPayment = parseFloat(document.getElementById("extra-payment").value);
+            const yearlyIncrement = parseFloat(document.getElementById("yearly-increment").value);
+            const yearlyExtraPayment = parseFloat(document.getElementById("yearly-extra-payment").value);
+
+            if(!extraPayment)
+              extraPayment = 0;
+
+            let loanBalance = loanAmount;
+            let months = 0;
+            let totalPaid = 0;
+            let currentYear = 0;
+
+            const resultDiv = document.getElementById("result1");
+            const result2Div = document.getElementById("result2");
+            resultDiv.innerHTML = "";
+            result2Div.innerHTML = "";
+
+            while (loanBalance > 0) {
+                const monthlyInterest = loanBalance * (interestRate / 12);
+                const totalPayment = monthlyPayment + extraPayment;
+                const principalPayment = totalPayment - monthlyInterest;
+                loanBalance -= principalPayment;
+                totalPaid += totalPayment;
+                months++;
+
+                if (months % 12 === 0) {
+                    extraPayment += yearlyIncrement;
+                }
+
+                if (months % 12 === 1) {                    
+                    loanBalance -= yearlyExtraPayment;
+                    currentYear++;
+                }
+
+                const result = `Month ${months}:<br>
+                                Monthly Payment: $${totalPayment.toFixed(2)}<br>
+                                Monthly Interest: $${monthlyInterest.toFixed(2)}<br>
+                                Principal Payment: $${principalPayment.toFixed(2)}<br>
+                                Remaining Loan Amount: $${loanBalance.toFixed(2)}<br>
+                                Current Year: ${currentYear}<br>
+                                Total Paid: $${totalPaid.toFixed(2)}<br><br>`;
+
+                resultDiv.innerHTML += result;
+            }
+            result2Div.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${currentYear} years`;
+            resultDiv.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${currentYear} years`;
+        }
+    </script>
+</body>
+</html>
