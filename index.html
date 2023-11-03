@@ -74,6 +74,10 @@
             <input type="number" id="interest-rate" step="0.01" required value="9.45">
         </div>
         <div class="input-container">
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" required>
+        </div>
+        <div class="input-container">
             <label for="loan-term">Loan Term (months) :</label>
             <input type="number" id="loan-term" required value="210">
         </div>
@@ -99,17 +103,21 @@
         
     </div>
     <script>
+        document.getElementById("start-date").valueAsDate = new Date();
         function calculate() {
             const loanAmount = parseFloat(document.getElementById("loan-amount").value);
-            const interestRate = parseFloat(document.getElementById("interest-rate").value) / 100;
+            const annualInterestRate = parseFloat(document.getElementById("interest-rate").value) / 100;
+            const dailyInterestRate = annualInterestRate / 365; // Interest rate per day
             const loanTerm = parseInt(document.getElementById("loan-term").value);
             const monthlyPayment = parseFloat(document.getElementById("monthly-payment").value);
             let extraPayment = parseFloat(document.getElementById("extra-payment").value);
             const yearlyIncrement = parseFloat(document.getElementById("yearly-increment").value);
             const yearlyExtraPayment = parseFloat(document.getElementById("yearly-extra-payment").value);
+            const startDate = new Date(document.getElementById("start-date").value);
 
-            if(!extraPayment)
-              extraPayment = 0;
+            if (!extraPayment) {
+                extraPayment = 0;
+            }
 
             let loanBalance = loanAmount;
             let months = 0;
@@ -121,24 +129,42 @@
             resultDiv.innerHTML = "";
             result2Div.innerHTML = "";
 
+            let currentDate = new Date(startDate); // Initialize currentDate with startDate
+
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
             while (loanBalance > 0) {
-                const monthlyInterest = loanBalance * (interestRate / 12);
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const monthName = monthNames[month];
+
+                const daysInMonth = new Date(year, month + 1, 0).getDate(); // Get the number of days in the current month
+
+                const dailyInterest = loanBalance * dailyInterestRate;
+                const monthlyInterest = dailyInterest * daysInMonth;
+
+                if (monthName === "January") {
+                    extraPayment += yearlyIncrement;
+                }
+
                 const totalPayment = monthlyPayment + extraPayment;
                 const principalPayment = totalPayment - monthlyInterest;
                 loanBalance -= principalPayment;
                 totalPaid += totalPayment;
                 months++;
 
-                if (months % 12 === 0) {
-                    extraPayment += yearlyIncrement;
+                if (monthName === "January") {
+                    loanBalance -= yearlyExtraPayment;
                 }
 
-                if (months % 12 === 1) {                    
-                    loanBalance -= yearlyExtraPayment;
+                if (months % 12 === 1) {
                     currentYear++;
                 }
 
-                const result = `Month ${months}:<br>
+                const result = `${monthName} ${year}:<br>
                                 Monthly Payment: $${totalPayment.toFixed(2)}<br>
                                 Monthly Interest: $${monthlyInterest.toFixed(2)}<br>
                                 Principal Payment: $${principalPayment.toFixed(2)}<br>
@@ -147,10 +173,15 @@
                                 Total Paid: $${totalPaid.toFixed(2)}<br><br>`;
 
                 resultDiv.innerHTML += result;
+
+                // Move to the next month
+                currentDate.setMonth(currentDate.getMonth() + 1);
             }
+
             result2Div.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${currentYear} years`;
             resultDiv.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${currentYear} years`;
         }
+
     </script>
 </body>
 </html>
