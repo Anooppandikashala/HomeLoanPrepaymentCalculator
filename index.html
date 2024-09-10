@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Home Loan Prepayment Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +17,7 @@
             box-shadow: 0px 0px 10px 0px #000000;
         }
 
-        h2{
+        h2 {
             text-align: center;
             margin-bottom: 40px;
         }
@@ -32,7 +33,7 @@
         }
 
         input {
-            width: 100%;
+            width: 99%;
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 3px;
@@ -42,10 +43,11 @@
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px;
             margin-top: 10px;
             border-radius: 5px;
             cursor: pointer;
+            width: 100%;
         }
 
         button:hover {
@@ -56,15 +58,49 @@
             margin-top: 20px;
             font-weight: bold;
         }
-        .result {
-            margin-top: 20px;
-            font-weight: bold;
-        }
 
-        .emi
-        {
+        .emi {
             color: red;
             font-weight: 900;
+        }
+
+        .horizontal-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #loanPieChart {
+            width: 200px !important;
+            height: 200px !important;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+    
+        th, td {
+            padding: 5px; 
+            text-align: left;
+            font-size: 12px;
+            border: 1px solid #000000;
+        }
+    
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    
+        /* Alternate row colors */
+        tbody tr:nth-child(odd) {
+            background-color: #a39f9f; 
+        }
+    
+        tbody tr:nth-child(even) {
+            background-color: #ffffff; 
         }
     </style>
 </head>
@@ -104,11 +140,42 @@
             <input type="number" id="yearly-extra-payment" required value="0">
         </div>
         <button onclick="calculate()">Calculate</button>
-        <div class="result" id="result2"></div>
-        <div class="result" id="result1"></div>
-        
+
+        <div class="horizontal-container">
+            <div class="result" id="result2"></div>
+            <canvas id="loanPieChart"></canvas>
+        </div>
+
+        <!-- Table to show the detailed results -->
+        <div class="result">
+            <table id="resultTable">
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Total Payment</th>
+                        <th>Interest Paid</th>
+                        <th>Principal Paid</th>
+                        <th>Remaining Loan</th>
+                        <th>Total Paid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic content goes here -->
+                </tbody>
+            </table>
+        </div>
     </div>
+
     <script>
+        document.getElementById("start-date").valueAsDate = new Date();
+        const ctx = document.getElementById('loanPieChart').getContext('2d');
+
+        let loanPieChart;
+
+        document.getElementById("resultTable").hidden = true;
+
         function getWords(monthCount) {
             function getPlural(number, word) {
                 return number === 1 && word.one || word.other;
@@ -122,11 +189,11 @@
             m && result.push(m + ' ' + getPlural(m, months));
             return result.join(' and ');
         }
-        document.getElementById("start-date").valueAsDate = new Date();
+
         function calculate() {
             const loanAmount = parseFloat(document.getElementById("loan-amount").value);
             const annualInterestRate = parseFloat(document.getElementById("interest-rate").value) / 100;
-            const dailyInterestRate = annualInterestRate / 365; // Interest rate per day
+            const dailyInterestRate = annualInterestRate / 365;
             const loanTerm = parseInt(document.getElementById("loan-term").value);
             const monthlyPayment = parseFloat(document.getElementById("monthly-payment").value);
             let extraPayment = parseFloat(document.getElementById("extra-payment").value);
@@ -134,11 +201,7 @@
             const yearlyExtraPayment = parseFloat(document.getElementById("yearly-extra-payment").value);
             const startDate = new Date(document.getElementById("start-date").value);
 
-            const monthlyEmi =
-              loanAmount *
-              (annualInterestRate/12) *
-              (Math.pow(1 + (annualInterestRate/12), loanTerm) /
-                (Math.pow(1 + (annualInterestRate/12), loanTerm) - 1));
+            document.getElementById("resultTable").hidden = false;
 
             if (!extraPayment) {
                 extraPayment = 0;
@@ -149,25 +212,31 @@
             let totalPaid = 0;
             let currentYear = 0;
 
-            const resultDiv = document.getElementById("result1");
-            const result2Div = document.getElementById("result2");
-            resultDiv.innerHTML = "";
-            result2Div.innerHTML = "";
+            const resultTableBody = document.getElementById("resultTable").getElementsByTagName("tbody")[0];
+            resultTableBody.innerHTML = ""; // Clear previous results
 
-            let currentDate = new Date(startDate); // Initialize currentDate with startDate
+            let currentDate = new Date(startDate);
+
+            const monthlyEmi =
+              loanAmount *
+              (annualInterestRate/12) *
+              (Math.pow(1 + (annualInterestRate/12), loanTerm) /
+                (Math.pow(1 + (annualInterestRate/12), loanTerm) - 1));
 
             const monthNames = [
                 "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ];
 
+            let totalInterestPaid = 0;
+            let totalPrincipalPaid = 0;
+
             while (loanBalance > 0) {
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth();
                 const monthName = monthNames[month];
 
-                const daysInMonth = new Date(year, month + 1, 0).getDate(); // Get the number of days in the current month
-
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
                 const dailyInterest = loanBalance * dailyInterestRate;
                 const monthlyInterest = dailyInterest * daysInMonth;
 
@@ -182,7 +251,7 @@
 
                 if (monthName === "January") {
                     loanBalance -= yearlyExtraPayment;
-                    totalPayment += yearlyExtraPayment
+                    totalPayment += yearlyExtraPayment;
                 }
 
                 if (months % 12 === 1) {
@@ -190,27 +259,57 @@
                 }
 
                 totalPaid += totalPayment;
+                totalPrincipalPaid += principalPayment;
+                totalInterestPaid += monthlyInterest;
 
-                const result = `${monthName} ${year}:<br>
-                                Monthly Payment: ₹${totalPayment.toFixed(2)}<br>
-                                Monthly Interest: ₹${monthlyInterest.toFixed(2)}<br>
-                                Principal Payment: ₹${principalPayment.toFixed(2)}<br>
-                                Remaining Loan Amount: ₹${loanBalance.toFixed(2)}<br>
-                                Current Year: ${currentYear}<br>
-                                Total Paid: ₹${totalPaid.toFixed(2)}<br><br>`;
-
-                resultDiv.innerHTML += result;
+                // Create a new row for the table
+                const row = resultTableBody.insertRow();
+                row.insertCell(0).innerText = months;
+                row.insertCell(1).innerText = monthName;
+                row.insertCell(2).innerText = year;
+                row.insertCell(3).innerText = `₹${totalPayment.toFixed(2)}`;
+                row.insertCell(4).innerText = `₹${monthlyInterest.toFixed(2)}`;
+                row.insertCell(5).innerText = `₹${principalPayment.toFixed(2)}`;
+                row.insertCell(6).innerText = `₹${loanBalance.toFixed(2)}`;
+                row.insertCell(7).innerText = `₹${totalPaid.toFixed(2)}`;
 
                 // Move to the next month
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
 
+            const result2Div = document.getElementById("result2");
+
+            // After your calculations, update result2 as follows
             let yearWord = getWords(months);
+            result2Div.innerHTML = `Congratulations! You paid off your loan <br>in ${months} months.<br>
+                                    or Approx ${yearWord}<br>
+                                    Current Monthly EMI: <span class="emi">${monthlyEmi.toFixed(2)}</span>`;
 
-            result2Div.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${yearWord}<br>Current Monthly Emi : <span class="emi">${monthlyEmi.toFixed(2)}</span>`;
-            resultDiv.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${currentYear} years`;
+            if (loanPieChart) {
+                loanPieChart.destroy();
+            }
+
+            // Display pie chart of total interest vs principal paid
+            loanPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Total Interest Paid', 'Total Principal Paid'],
+                    datasets: [{
+                        data: [totalInterestPaid, totalPrincipalPaid],
+                        backgroundColor: ['#FF6384', '#36A2EB'],
+                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
         }
-
     </script>
 </body>
 </html>
