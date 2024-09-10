@@ -73,7 +73,7 @@
         <h2><u>Home Loan Prepayment Calculator</u></h2>
         <div class="input-container">
             <label for="loan-amount">Loan Amount :</label>
-            <input type="number" id="loan-amount" required value="2237528">
+            <input type="number" id="loan-amount" required value="2147456">
         </div>
         <div class="input-container">
             <label for="interest-rate">Interest Rate (%):</label>
@@ -85,11 +85,11 @@
         </div>
         <div class="input-container">
             <label for="loan-term">Loan Term (months) :</label>
-            <input type="number" id="loan-term" required value="205">
+            <input type="number" id="loan-term" required value="199">
         </div>
         <div class="input-container">
             <label for="monthly-payment">Current Monthly Payment :</label>
-            <input type="number" id="monthly-payment" required value="30000">
+            <input type="number" id="monthly-payment" required value="32500">
         </div>
         <div class="input-container">
             <label for="extra-payment">Extra Monthly Payment :</label>
@@ -109,6 +109,19 @@
         
     </div>
     <script>
+        function getWords(monthCount) {
+            function getPlural(number, word) {
+                return number === 1 && word.one || word.other;
+            }
+            var months = { one: 'month', other: 'months' },
+                years = { one: 'year', other: 'years' },
+                m = monthCount % 12,
+                y = Math.floor(monthCount / 12),
+                result = [];
+            y && result.push(y + ' ' + getPlural(y, years));
+            m && result.push(m + ' ' + getPlural(m, months));
+            return result.join(' and ');
+        }
         document.getElementById("start-date").valueAsDate = new Date();
         function calculate() {
             const loanAmount = parseFloat(document.getElementById("loan-amount").value);
@@ -162,19 +175,21 @@
                     extraPayment += yearlyIncrement;
                 }
 
-                const totalPayment = monthlyPayment + extraPayment;
+                let totalPayment = monthlyPayment + extraPayment;
                 const principalPayment = totalPayment - monthlyInterest;
                 loanBalance -= principalPayment;
-                totalPaid += totalPayment;
                 months++;
 
                 if (monthName === "January") {
                     loanBalance -= yearlyExtraPayment;
+                    totalPayment += yearlyExtraPayment
                 }
 
                 if (months % 12 === 1) {
                     currentYear++;
                 }
+
+                totalPaid += totalPayment;
 
                 const result = `${monthName} ${year}:<br>
                                 Monthly Payment: ₹${totalPayment.toFixed(2)}<br>
@@ -190,7 +205,9 @@
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
 
-            result2Div.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${currentYear} years<br>Current Monthly Emi : <span class="emi">${monthlyEmi.toFixed(2)}</span>`;
+            let yearWord = getWords(months);
+
+            result2Div.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${yearWord}<br>Current Monthly Emi : <span class="emi">${monthlyEmi.toFixed(2)}</span>`;
             resultDiv.innerHTML += `Congratulations! You paid off your loan <br>in ${months} months. <br>or <br>in Approx ${currentYear} years`;
         }
 
