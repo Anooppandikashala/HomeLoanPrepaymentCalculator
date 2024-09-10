@@ -1,1 +1,3 @@
 # HomeLoanPrepaymentCalculator
+
+![](./scnsht.png)
