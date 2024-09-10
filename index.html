@@ -24,7 +24,8 @@
 
         .input-container {
             margin: 10px 0;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            flex: 0.475;
         }
 
         label {
@@ -33,7 +34,7 @@
         }
 
         input {
-            width: 99%;
+            width: 100%;
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 3px;
@@ -96,48 +97,65 @@
     
         /* Alternate row colors */
         tbody tr:nth-child(odd) {
-            background-color: #a39f9f; 
+            background-color: #c9c2c2; 
         }
     
         tbody tr:nth-child(even) {
             background-color: #ffffff; 
         }
+
+        .input-container-group
+        {
+            display: flex;
+            align-items: center;
+            width: 98%;
+            justify-content: space-between;
+        }
+
     </style>
 </head>
 <body>
     <div class="calculator-container">
         <h2><u>Home Loan Prepayment Calculator</u></h2>
-        <div class="input-container">
-            <label for="loan-amount">Loan Amount :</label>
-            <input type="number" id="loan-amount" required value="2147456">
+        <div class="input-container-group">
+            <div class="input-container">
+                <label for="loan-amount">Loan Amount :</label>
+                <input type="number" id="loan-amount" required value="2147456">
+            </div>
+            <div class="input-container">
+                <label for="interest-rate">Interest Rate (%):</label>
+                <input type="number" id="interest-rate" step="0.01" required value="9.45">
+            </div>
         </div>
-        <div class="input-container">
-            <label for="interest-rate">Interest Rate (%):</label>
-            <input type="number" id="interest-rate" step="0.01" required value="9.45">
+        <div class="input-container-group">
+            <div class="input-container">
+                <label for="start-date">Start Date:</label>
+                <input type="date" id="start-date" required>
+            </div>
+            <div class="input-container">
+                <label for="loan-term">Loan Term (months) :</label>
+                <input type="number" id="loan-term" required value="199">
+            </div>
         </div>
-        <div class="input-container">
-            <label for="start-date">Start Date:</label>
-            <input type="date" id="start-date" required>
+        <div class="input-container-group">
+            <div class="input-container">
+                <label for="monthly-payment">Current Monthly Payment :</label>
+                <input type="number" id="monthly-payment" required value="32500">
+            </div>
+            <div class="input-container">
+                <label for="extra-payment">Extra Monthly Payment :</label>
+                <input type="number" id="extra-payment" required value="0">
+            </div>
         </div>
-        <div class="input-container">
-            <label for="loan-term">Loan Term (months) :</label>
-            <input type="number" id="loan-term" required value="199">
-        </div>
-        <div class="input-container">
-            <label for="monthly-payment">Current Monthly Payment :</label>
-            <input type="number" id="monthly-payment" required value="32500">
-        </div>
-        <div class="input-container">
-            <label for="extra-payment">Extra Monthly Payment :</label>
-            <input type="number" id="extra-payment" required value="0">
-        </div>
-        <div class="input-container">
-            <label for="yearly-increment">Yearly Extra Payment Increment :</label>
-            <input type="number" id="yearly-increment" required value="0">
-        </div>
-        <div class="input-container">
-            <label for="yearly-increment">Yearly Extra Amount Lumpsum :</label>
-            <input type="number" id="yearly-extra-payment" required value="0">
+        <div class="input-container-group">
+            <div class="input-container">
+                <label for="yearly-increment">Yearly Extra Payment Increment :</label>
+                <input type="number" id="yearly-increment" required value="0">
+            </div>
+            <div class="input-container">
+                <label for="yearly-increment">Yearly Extra Amount Lumpsum :</label>
+                <input type="number" id="yearly-extra-payment" required value="0">
+            </div>
         </div>
         <button onclick="calculate()">Calculate</button>
 
