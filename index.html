@@ -88,7 +88,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
         }
     
         th, td {
@@ -129,7 +129,7 @@
         <div class="input-container-group">
             <div class="input-container">
                 <label for="loan-amount">Loan Amount :</label>
-                <input type="number" id="loan-amount" required value="2147456">
+                <input type="number" id="loan-amount" required value="2131654">
             </div>
             <div class="input-container">
                 <label for="interest-rate">Interest Rate (%):</label>
@@ -143,7 +143,7 @@
             </div>
             <div class="input-container">
                 <label for="loan-term">Loan Term (months) :</label>
-                <input type="number" id="loan-term" required value="199">
+                <input type="number" id="loan-term" required value="198">
             </div>
         </div>
         <div class="input-container-group">
@@ -272,7 +272,7 @@
                 }
 
                 let totalPayment = monthlyPayment + extraPayment;
-                const principalPayment = totalPayment - monthlyInterest;
+                let principalPayment = totalPayment - monthlyInterest;
                 loanBalance -= principalPayment;
                 months++;
 
@@ -285,9 +285,27 @@
                     currentYear++;
                 }
 
-                totalPaid += totalPayment;
-                totalPrincipalPaid += principalPayment;
-                totalInterestPaid += monthlyInterest;
+
+                if(loanBalance < 0)
+                {
+                    // loanBalance is currently negative 
+                    // excess amount should reduce from
+                    // totalPayment and principalPayment
+                    // and set the loanBalance = 0
+                    totalPayment += loanBalance;
+                    principalPayment += loanBalance;
+                    loanBalance = 0;
+
+                    totalPaid += totalPayment;
+                    totalPrincipalPaid += principalPayment;
+                    totalInterestPaid += monthlyInterest;
+                }
+                else
+                {
+                    totalPaid += totalPayment;
+                    totalPrincipalPaid += principalPayment;
+                    totalInterestPaid += monthlyInterest;
+                }
 
                 // Create a new row for the table
                 const row = resultTableBody.insertRow();
@@ -309,8 +327,10 @@
             // After your calculations, update result2 as follows
             let yearWord = getWords(months);
             result2Div.innerHTML = `Congratulations! You paid off your loan <br>in ${months} months.<br>
-                                    or Approx ${yearWord}<br>
-                                    Current Monthly EMI: <span class="emi">${monthlyEmi.toFixed(2)}</span>`;
+                                    or Approx ${yearWord}<br><br>
+                                    Current Monthly EMI: <span class="emi">₹ ${monthlyEmi.toFixed(2)}</span> <br><br>
+                                    Total Interest Paid: <span class="emi">₹ ${totalInterestPaid.toFixed(2)}</span><br>
+                                    Total Amount Paid: <span class="emi">₹ ${totalPaid.toFixed(2)}<span class="emi">`;
 
             if (loanPieChart) {
                 loanPieChart.destroy();
