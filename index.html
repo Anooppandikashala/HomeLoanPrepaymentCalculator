@@ -1,208 +1,478 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home Loan Prepayment Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Loan Prepayment Calculator V2.0</title>
     <meta name="title" content="Home Loan Prepayment Calculator">
     <meta name="description" content="Calculate your home loan prepayment savings and payoff timeline using this simple, interactive tool. Get a detailed breakdown of monthly payments and savings.">
     <meta name="keywords" content="Home loan calculator, Loan prepayment, Loan payoff calculator, EMI calculator, Mortgage calculator, Loan interest savings, Extra payment calculator, Loan term reduction, Home loan interest rate, Mortgage prepayment, Loan amortization, Early loan repayment, Financial planning, Monthly payment calculator">
     <meta name="robots" content="index, follow">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="language" content="English">
-    <meta name="revisit-after" content="3 days">
     <meta name="author" content="ANOOP P">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
         }
 
         .calculator-container {
-            max-width: 728px;
+            max-width: 1200px;
             margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            background-color: #f2f2f2;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px 0px #000000;
+            animation: slideUp 0.6s ease-out;
         }
 
-        h2 {
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
             text-align: center;
             margin-bottom: 40px;
         }
 
-        .input-container {
-            margin: 10px 0;
-            margin-bottom: 10px;
-            flex: 0.475;
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
         }
 
-        label {
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
             display: block;
-            font-weight: bold;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
-        input {
+        .input-group input {
             width: 100%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
         }
 
-        button {
-            background-color: #4CAF50;
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
-            width: 100%;
+            transition: all 0.3s ease;
+            margin: 24px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        button:hover {
-            background-color: #45a049;
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .result {
-            margin-top: 20px;
-            font-weight: bold;
+        .calculate-btn:active {
+            transform: translateY(0);
         }
 
-        .emi {
-            color: red;
-            font-weight: 900;
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 32px;
+            margin: 32px 0;
+            align-items: start;
         }
 
-        .horizontal-container {
+        .result-summary {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .result-summary h3 {
+            color: #1e293b;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .result-item {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .emi-value {
+            color: #dc2626;
+        }
+
+        .savings-value {
+            color: #059669;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            min-width: 320px;
         }
 
         #loanPieChart {
-            width: 200px !important;
-            height: 200px !important;
+            max-width: 280px !important;
+            max-height: 280px !important;
+        }
+
+        .table-container {
+            margin-top: 32px;
+            overflow-x: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            background: white;
+            min-width: 800px;
         }
-    
-        th, td {
-            padding: 5px; 
-            text-align: left;
-            font-size: 12px;
-            border: 1px solid #000000;
-        }
-    
+
         th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            font-size: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-    
-        /* Alternate row colors */
-        tbody tr:nth-child(odd) {
-            background-color: #c9c2c2; 
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
         }
-    
+
         tbody tr:nth-child(even) {
-            background-color: #ffffff; 
+            background-color: #f8fafc;
         }
 
-        .input-container-group
-        {
-            display: flex;
-            align-items: center;
-            width: 98%;
-            justify-content: space-between;
+        tbody tr:hover {
+            background-color: #e0f2fe;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
         }
 
-        .ad-container
-        {
-            height: 90px;
-            width: 728px;
+        .currency {
+            font-weight: 600;
+            color: #1e293b;
         }
 
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 32px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .calculator-container {
+                padding: 24px;
+                border-radius: 16px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .results-section {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .chart-container {
+                min-width: unset;
+            }
+
+            #loanPieChart {
+                max-width: 250px !important;
+                max-height: 250px !important;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .input-group input {
+                padding: 12px;
+            }
+
+            .calculate-btn {
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+
+            .result-summary {
+                padding: 16px;
+            }
+
+            .chart-container {
+                padding: 16px;
+            }
+
+            #loanPieChart {
+                max-width: 220px !important;
+                max-height: 220px !important;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .calculator-container {
+                background: rgba(30, 41, 59, 0.95);
+                color: #f1f5f9;
+            }
+
+            .input-group label {
+                color: #cbd5e1;
+            }
+
+            .input-group input {
+                background: #475569;
+                border-color: #64748b;
+                color: #f1f5f9;
+            }
+
+            .result-summary {
+                background: linear-gradient(135deg, #374151, #4b5563);
+            }
+
+            .result-summary h3 {
+                color: #f1f5f9;
+            }
+
+            th {
+                background: linear-gradient(135deg, #4f48d5, #3e1584);
+            }
+
+            tbody tr:nth-child(odd) {
+                background-color: #c9c2c2;
+                color: #1e293b;
+                font-weight: 600;
+            }
+        
+            tbody tr:nth-child(even) {
+                background-color: #a49b9b;
+                color: #1e293b;
+                font-weight: 600;
+            }
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .highlight-card h3 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .highlight-card p {
+            color: #b45309;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div class="calculator-container">
-        <h2><u>Home Loan Prepayment Calculator</u></h2>
-        <div class="input-container-group">
-            <div class="input-container">
-                <label for="loan-amount">Loan Amount :</label>
-                <input type="number" id="loan-amount" required value="1960830">
-            </div>
-            <div class="input-container">
-                <label for="interest-rate">Interest Rate (%):</label>
-                <input type="number" id="interest-rate" step="0.01" required value="7.7">
-            </div>
+        <div class="header">
+            <h1>Home Loan Prepayment Calculator V2.0</h1>
+            <p>Calculate your savings and payoff timeline with prepayments</p>
         </div>
-        <div class="input-container-group">
-            <div class="input-container">
-                <label for="start-date">Start Date:</label>
+
+        <div class="form-grid">
+            <div class="input-group">
+                <label for="loan-amount">Loan Amount (₹)</label>
+                <input type="number" id="loan-amount" required value="1960830" min="0" step="1000">
+            </div>
+            
+            <div class="input-group">
+                <label for="interest-rate">Interest Rate (%)</label>
+                <input type="number" id="interest-rate" step="0.01" required value="7.7" min="0" max="20">
+            </div>
+            
+            <div class="input-group">
+                <label for="start-date">Start Date</label>
                 <input type="date" id="start-date" required>
             </div>
-            <div class="input-container">
-                <label for="loan-term">Loan Term (months) :</label>
-                <input type="number" id="loan-term" required value="189">
+            
+            <div class="input-group">
+                <label for="loan-term">Loan Term (months)</label>
+                <input type="number" id="loan-term" required value="189" min="1" max="600">
             </div>
-        </div>
-        <div class="input-container-group">
-            <div class="input-container">
-                <label for="monthly-payment">Current Monthly Payment :</label>
-                <input type="number" id="monthly-payment" required value="35000">
+            
+            <div class="input-group">
+                <label for="monthly-payment">Current Monthly Payment (₹)</label>
+                <input type="number" id="monthly-payment" required value="35000" min="0" step="100">
             </div>
-            <div class="input-container">
-                <label for="extra-payment">Extra Monthly Payment :</label>
-                <input type="number" id="extra-payment" required value="0">
+            
+            <div class="input-group">
+                <label for="extra-payment">Extra Monthly Payment (₹)</label>
+                <input type="number" id="extra-payment" value="0" min="0" step="100">
             </div>
-        </div>
-        <div class="input-container-group">
-            <div class="input-container">
-                <label for="yearly-increment">Yearly Extra Payment Increment :</label>
-                <input type="number" id="yearly-increment" required value="2500">
+            
+            <div class="input-group">
+                <label for="yearly-increment">Yearly Extra Payment Increment (₹)</label>
+                <input type="number" id="yearly-increment" value="2500" min="0" step="100">
             </div>
-            <div class="input-container">
-                <label for="yearly-increment">Yearly Extra Amount Lumpsum :</label>
-                <input type="number" id="yearly-extra-payment" required value="0">
+            
+            <div class="input-group">
+                <label for="yearly-extra-payment">Yearly Lumpsum Amount (₹)</label>
+                <input type="number" id="yearly-extra-payment" value="0" min="0" step="1000">
             </div>
-        </div>
-        <div class="ad-container">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '1f502fa857d008f894f6c5e5400cd39d',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/1f502fa857d008f894f6c5e5400cd39d/invoke.js"></script>
-        </div>
-        <button onclick="calculate()">Calculate</button>
-
-        <div class="horizontal-container">
-            <div class="result" id="result2"></div>
-            <canvas id="loanPieChart"></canvas>
         </div>
 
-        <!-- Table to show the detailed results -->
-        <div class="result">
+        <button class="calculate-btn" onclick="calculate()">
+            Calculate Loan Payoff
+        </button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Calculating your loan payoff schedule...</p>
+        </div>
+
+        <div class="results-section" id="results-section" style="display: none;">
+            <div class="result-summary" id="result-summary">
+                <!-- Results will be populated here -->
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="loanPieChart"></canvas>
+            </div>
+        </div>
+
+        <div class="table-container" id="table-container" style="display: none;">
             <table id="resultTable">
                 <thead>
                     <tr>
-                        <th>Sl No</th>
+                        <th>Month #</th>
                         <th>Month</th>
                         <th>Year</th>
                         <th>Total Payment</th>
                         <th>Interest Paid</th>
                         <th>Principal Paid</th>
-                        <th>Remaining Loan</th>
+                        <th>Remaining Balance</th>
                         <th>Total Paid</th>
                     </tr>
                 </thead>
@@ -213,18 +483,19 @@
         </div>
     </div>
 
-    <!-- <script async="async" data-cfasync="false" src="//pl25521369.profitablecpmrate.com/00d347324190132b3110686a4584e341/invoke.js"></script>
-    <div id="container-00d347324190132b3110686a4584e341">
-
-    </div> -->
-
     <script>
         document.getElementById("start-date").valueAsDate = new Date();
         const ctx = document.getElementById('loanPieChart').getContext('2d');
-
         let loanPieChart;
 
-        document.getElementById("resultTable").hidden = true;
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
 
         function getWords(monthCount) {
             function getPlural(number, word) {
@@ -240,14 +511,35 @@
             return result.join(' and ');
         }
 
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('table-container').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('results-section').style.display = 'grid';
+            document.getElementById('table-container').style.display = 'block';
+        }
+
         function calculate() {
+            showLoading();
+            
+            // Add slight delay for better UX
+            setTimeout(() => {
+                performCalculation();
+            }, 500);
+        }
+
+        function performCalculation() {
             const parseFloatAbs = (value) => {
-            const parsed = parseFloat(value);
+                const parsed = parseFloat(value);
                 return isNaN(parsed) ? 0 : Math.abs(parsed);
             };
 
             const parseIntAbs = (value) => {
-            const parsed = parseInt(value);
+                const parsed = parseInt(value);
                 return isNaN(parsed) ? 0 : Math.abs(parsed);
             };
 
@@ -263,42 +555,23 @@
             const startDateInput = document.getElementById("start-date").value;
             const startDate = startDateInput ? new Date(startDateInput) : new Date();
 
-            if(loanTerm === 0)
-            {
-                alert("Please ensure:\n- Loan term is not zero\n");
+            // Validation
+            if(loanTerm === 0) {
+                alert("Please ensure loan term is not zero");
+                hideLoading();
                 return;
             }
 
-            if(loanAmount === 0)
-            {
-                alert("Please ensure:\n- Loan Amiunt is not zero\n");
+            if(loanAmount === 0) {
+                alert("Please ensure loan amount is not zero");
+                hideLoading();
                 return;
             }
 
-            if( monthlyPayment === 0 &&
-                extraPayment === 0 &&
-                yearlyIncrement === 0 &&
-                yearlyExtraPayment === 0 )
-            {
-                alert("Please ensure:\n- At least one payment value is greater than zero (monthly, extra, or yearly payments).");
+            if(monthlyPayment === 0 && extraPayment === 0 && yearlyIncrement === 0 && yearlyExtraPayment === 0) {
+                alert("Please ensure at least one payment value is greater than zero");
+                hideLoading();
                 return;
-            }
-
-            document.getElementById("resultTable").hidden = false;
-
-            if(!yearlyIncrement)
-            {
-                yearlyIncrement = 0;
-            }
-
-            if(!yearlyExtraPayment)
-            {
-                yearlyExtraPayment = 0;
-            }
-
-            if (!extraPayment)
-            {
-                extraPayment = 0;
             }
 
             let loanBalance = loanAmount;
@@ -307,14 +580,12 @@
             let currentYear = 0;
 
             const resultTableBody = document.getElementById("resultTable").getElementsByTagName("tbody")[0];
-            resultTableBody.innerHTML = ""; // Clear previous results
+            resultTableBody.innerHTML = "";
 
             let currentDate = new Date(startDate);
 
-            const monthlyEmi =
-              loanAmount *
-              (annualInterestRate/12) *
-              (Math.pow(1 + (annualInterestRate/12), loanTerm) /
+            const monthlyEmi = loanAmount * (annualInterestRate/12) * 
+                (Math.pow(1 + (annualInterestRate/12), loanTerm) /
                 (Math.pow(1 + (annualInterestRate/12), loanTerm) - 1));
 
             const monthNames = [
@@ -352,78 +623,111 @@
                     currentYear++;
                 }
 
-
-                if(loanBalance < 0)
-                {
-                    // loanBalance is currently negative 
-                    // excess amount should reduce from
-                    // totalPayment and principalPayment
-                    // and set the loanBalance = 0
+                if(loanBalance < 0) {
                     totalPayment += loanBalance;
                     principalPayment += loanBalance;
                     loanBalance = 0;
-
-                    totalPaid += totalPayment;
-                    totalPrincipalPaid += principalPayment;
-                    totalInterestPaid += monthlyInterest;
-                }
-                else
-                {
-                    totalPaid += totalPayment;
-                    totalPrincipalPaid += principalPayment;
-                    totalInterestPaid += monthlyInterest;
                 }
 
-                // Create a new row for the table
+                totalPaid += totalPayment;
+                totalPrincipalPaid += principalPayment;
+                totalInterestPaid += monthlyInterest;
+
+                // Create table row
                 const row = resultTableBody.insertRow();
-                row.insertCell(0).innerText = months;
+                row.insertCell(0).innerHTML = `<span class="currency">${months}</span>`;
                 row.insertCell(1).innerText = monthName;
                 row.insertCell(2).innerText = year;
-                row.insertCell(3).innerText = `₹${totalPayment.toFixed(2)}`;
-                row.insertCell(4).innerText = `₹${monthlyInterest.toFixed(2)}`;
-                row.insertCell(5).innerText = `₹${principalPayment.toFixed(2)}`;
-                row.insertCell(6).innerText = `₹${loanBalance.toFixed(2)}`;
-                row.insertCell(7).innerText = `₹${totalPaid.toFixed(2)}`;
+                row.insertCell(3).innerHTML = `<span class="currency">${formatCurrency(totalPayment)}</span>`;
+                row.insertCell(4).innerHTML = `<span class="currency">${formatCurrency(monthlyInterest)}</span>`;
+                row.insertCell(5).innerHTML = `<span class="currency">${formatCurrency(principalPayment)}</span>`;
+                row.insertCell(6).innerHTML = `<span class="currency">${formatCurrency(loanBalance)}</span>`;
+                row.insertCell(7).innerHTML = `<span class="currency">${formatCurrency(totalPaid)}</span>`;
 
-                // Move to the next month
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
 
-            const result2Div = document.getElementById("result2");
+            // Update results summary
+            const resultSummary = document.getElementById("result-summary");
+            const yearWord = getWords(months);
+            const interestSavings = (monthlyEmi * loanTerm) - totalPaid;
 
-            // After your calculations, update result2 as follows
-            let yearWord = getWords(months);
-            result2Div.innerHTML = `Congratulations! You paid off your loan <br>in ${months} months.<br>
-                                    or Approx ${yearWord}<br><br>
-                                    Current Monthly EMI: <span class="emi">₹ ${monthlyEmi.toFixed(2)}</span> <br><br>
-                                    Total Interest Paid: <span class="emi">₹ ${totalInterestPaid.toFixed(2)}</span><br>
-                                    Total Amount Paid: <span class="emi">₹ ${totalPaid.toFixed(2)}<span class="emi">`;
+            resultSummary.innerHTML = `
+                <h3>🎉 Loan Payoff Summary</h3>
+                <div class="result-item">
+                    <span class="result-label">Payoff Time:</span>
+                    <span class="result-value">${months} months (${yearWord})</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Regular Monthly EMI:</span>
+                    <span class="result-value emi-value">${formatCurrency(monthlyEmi)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Interest Paid:</span>
+                    <span class="result-value emi-value">${formatCurrency(totalInterestPaid)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Amount Paid:</span>
+                    <span class="result-value emi-value">${formatCurrency(totalPaid)}</span>
+                </div>
+                ${interestSavings > 0 ? `
+                <div class="result-item">
+                    <span class="result-label">Interest Savings:</span>
+                    <span class="result-value savings-value">${formatCurrency(interestSavings)}</span>
+                </div>
+                ` : ''}
+            `;
 
+            // Update pie chart
             if (loanPieChart) {
                 loanPieChart.destroy();
             }
 
-            // Display pie chart of total interest vs principal paid
             loanPieChart = new Chart(ctx, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: ['Total Interest Paid', 'Total Principal Paid'],
                     datasets: [{
                         data: [totalInterestPaid, totalPrincipalPaid],
-                        backgroundColor: ['#FF6384', '#36A2EB'],
-                        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                        backgroundColor: ['#ef4444', '#10b981'],
+                        borderWidth: 0,
+                        cutout: '60%'
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'top',
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + formatCurrency(context.parsed);
+                                }
+                            }
                         }
                     }
                 }
             });
+
+            hideLoading();
         }
+
+        // Add input validation and formatting
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                if (this.value < 0) this.value = 0;
+            });
+        });
     </script>
 </body>
 </html>
