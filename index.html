@@ -135,11 +135,11 @@
         <div class="input-container-group">
             <div class="input-container">
                 <label for="loan-amount">Loan Amount :</label>
-                <input type="number" id="loan-amount" required value="1982855">
+                <input type="number" id="loan-amount" required value="1960830">
             </div>
             <div class="input-container">
                 <label for="interest-rate">Interest Rate (%):</label>
-                <input type="number" id="interest-rate" step="0.01" required value="8.2">
+                <input type="number" id="interest-rate" step="0.01" required value="7.7">
             </div>
         </div>
         <div class="input-container-group">
@@ -149,7 +149,7 @@
             </div>
             <div class="input-container">
                 <label for="loan-term">Loan Term (months) :</label>
-                <input type="number" id="loan-term" required value="190">
+                <input type="number" id="loan-term" required value="189">
             </div>
         </div>
         <div class="input-container-group">
@@ -241,19 +241,63 @@
         }
 
         function calculate() {
-            const loanAmount = parseFloat(document.getElementById("loan-amount").value);
-            const annualInterestRate = parseFloat(document.getElementById("interest-rate").value) / 100;
+            const parseFloatAbs = (value) => {
+            const parsed = parseFloat(value);
+                return isNaN(parsed) ? 0 : Math.abs(parsed);
+            };
+
+            const parseIntAbs = (value) => {
+            const parsed = parseInt(value);
+                return isNaN(parsed) ? 0 : Math.abs(parsed);
+            };
+
+            const loanAmount = parseFloatAbs(document.getElementById("loan-amount").value);
+            const annualInterestRate = parseFloatAbs(document.getElementById("interest-rate").value) / 100;
             const dailyInterestRate = annualInterestRate / 365;
-            const loanTerm = parseInt(document.getElementById("loan-term").value);
-            const monthlyPayment = parseFloat(document.getElementById("monthly-payment").value);
-            let extraPayment = parseFloat(document.getElementById("extra-payment").value);
-            const yearlyIncrement = parseFloat(document.getElementById("yearly-increment").value);
-            const yearlyExtraPayment = parseFloat(document.getElementById("yearly-extra-payment").value);
-            const startDate = new Date(document.getElementById("start-date").value);
+            const loanTerm = parseIntAbs(document.getElementById("loan-term").value);
+            const monthlyPayment = parseFloatAbs(document.getElementById("monthly-payment").value);
+            let extraPayment = parseFloatAbs(document.getElementById("extra-payment").value);
+            let yearlyIncrement = parseFloatAbs(document.getElementById("yearly-increment").value);
+            let yearlyExtraPayment = parseFloatAbs(document.getElementById("yearly-extra-payment").value);
+
+            const startDateInput = document.getElementById("start-date").value;
+            const startDate = startDateInput ? new Date(startDateInput) : new Date();
+
+            if(loanTerm === 0)
+            {
+                alert("Please ensure:\n- Loan term is not zero\n");
+                return;
+            }
+
+            if(loanAmount === 0)
+            {
+                alert("Please ensure:\n- Loan Amiunt is not zero\n");
+                return;
+            }
+
+            if( monthlyPayment === 0 &&
+                extraPayment === 0 &&
+                yearlyIncrement === 0 &&
+                yearlyExtraPayment === 0 )
+            {
+                alert("Please ensure:\n- At least one payment value is greater than zero (monthly, extra, or yearly payments).");
+                return;
+            }
 
             document.getElementById("resultTable").hidden = false;
 
-            if (!extraPayment) {
+            if(!yearlyIncrement)
+            {
+                yearlyIncrement = 0;
+            }
+
+            if(!yearlyExtraPayment)
+            {
+                yearlyExtraPayment = 0;
+            }
+
+            if (!extraPayment)
+            {
                 extraPayment = 0;
             }
 
