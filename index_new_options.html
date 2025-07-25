@@ -26,77 +26,8 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 0;
+            padding: 20px;
             color: #333;
-        }
-
-        .top-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 16px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-        }
-
-        .nav-title h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .nav-btn {
-            padding: 10px 20px;
-            border: 2px solid #e5e7eb;
-            border-radius: 25px;
-            background: white;
-            color: #6b7280;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-        }
-
-        .nav-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .nav-btn.active:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
         .calculator-container {
@@ -107,28 +38,7 @@
             border-radius: 24px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            margin-top: 20px;
-            margin-bottom: 20px;
             animation: slideUp 0.6s ease-out;
-        }
-
-        .calculator-view {
-            width: 100%;
-        }
-
-        .classic-form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .classic-results-section {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 32px;
-            margin: 32px 0;
-            align-items: start;
         }
 
         @keyframes slideUp {
@@ -500,33 +410,16 @@
             .payment-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-
-            .classic-form-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
 
         @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 20px;
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .nav-title h2 {
-                font-size: 1.3rem;
-            }
-
-            .nav-buttons {
-                width: 100%;
-                justify-content: center;
+            body {
+                padding: 12px;
             }
 
             .calculator-container {
                 padding: 24px;
                 border-radius: 16px;
-                margin-top: 10px;
-                margin-bottom: 10px;
             }
 
             .header h1 {
@@ -545,16 +438,6 @@
 
             .comparison-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .classic-form-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .classic-results-section {
-                grid-template-columns: 1fr;
-                gap: 24px;
             }
         }
 
@@ -579,91 +462,68 @@
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <div class="top-nav">
-        <div class="nav-container">
-            <div class="nav-title">
-                <h2>🏠 Home Loan Calculator</h2>
-            </div>
-            <div class="nav-buttons">
-                <button class="nav-btn" id="classic-btn" onclick="switchToClassic()">
-                    📊 Classic Calculator
-                </button>
-                <button class="nav-btn active" id="advanced-btn" onclick="switchToAdvanced()">
-                    🚀 Advanced Calculator
-                </button>
+    <div class="calculator-container">
+        <div class="header">
+            <h1>Home Loan Prepayment Calculator V2.0</h1>
+            <p>Calculate and compare multiple payment strategies</p>
+        </div>
+
+        <!-- Loan Details Section -->
+        <div class="loan-details-section">
+            <h3>📊 Loan Details</h3>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="loan-amount">Loan Amount (₹)</label>
+                    <input type="number" id="loan-amount" required value="1960830" min="0" step="1000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="interest-rate">Interest Rate (%)</label>
+                    <input type="number" id="interest-rate" step="0.01" required value="7.7" min="0" max="20">
+                </div>
+                
+                <div class="input-group">
+                    <label for="start-date">Start Date</label>
+                    <input type="date" id="start-date" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="loan-term">Loan Term (months)</label>
+                    <input type="number" id="loan-term" required value="189" min="1" max="600">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="calculator-container">
-        <!-- Classic Calculator (Hidden by default) -->
-        <div class="calculator-view" id="classic-calculator" style="display: none;">
-            <div class="header">
-                <h1>Home Loan Prepayment Calculator V1.0</h1>
-                <p>Calculate your savings and payoff timeline with prepayments</p>
+        <!-- Payment Options Section -->
+        <div class="payment-options-section">
+            <div id="payment-options-container">
+                <!-- Payment options will be dynamically added here -->
             </div>
-
-            <div class="classic-form-grid">
-                <div class="input-group">
-                    <label for="classic-loan-amount">Loan Amount (₹)</label>
-                    <input type="number" id="classic-loan-amount" required value="1960830" min="0" step="1000">
-                </div>
-                
-                <div class="input-group">
-                    <label for="classic-interest-rate">Interest Rate (%)</label>
-                    <input type="number" id="classic-interest-rate" step="0.01" required value="7.7" min="0" max="20">
-                </div>
-                
-                <div class="input-group">
-                    <label for="classic-start-date">Start Date</label>
-                    <input type="date" id="classic-start-date" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="classic-loan-term">Loan Term (months)</label>
-                    <input type="number" id="classic-loan-term" required value="189" min="1" max="600">
-                </div>
-                
-                <div class="input-group">
-                    <label for="classic-monthly-payment">Current Monthly Payment (₹)</label>
-                    <input type="number" id="classic-monthly-payment" required value="35000" min="0" step="100">
-                </div>
-                
-                <div class="input-group">
-                    <label for="classic-extra-payment">Extra Monthly Payment (₹)</label>
-                    <input type="number" id="classic-extra-payment" value="0" min="0" step="100">
-                </div>
-                
-                <div class="input-group">
-                    <label for="classic-yearly-increment">Yearly Extra Payment Increment (₹)</label>
-                    <input type="number" id="classic-yearly-increment" value="2500" min="0" step="100">
-                </div>
-                
-                <div class="input-group">
-                    <label for="classic-yearly-extra-payment">Yearly Lumpsum Amount (₹)</label>
-                    <input type="number" id="classic-yearly-extra-payment" value="0" min="0" step="1000">
-                </div>
-            </div>
-
-            <button class="calculate-btn" onclick="calculateClassic()">
-                Calculate Loan Payoff
+            
+            <button class="add-option-btn" onclick="addPaymentOption()">
+                ➕ Add Payment Option
             </button>
+        </div>
 
-            <div class="classic-results-section" id="classic-results-section" style="display: none;">
-                <div class="result-summary" id="classic-result-summary">
-                    <!-- Results will be populated here -->
-                </div>
-                
-                <div class="chart-container">
-                    <canvas id="classicLoanPieChart"></canvas>
-                </div>
+        <button class="calculate-btn" onclick="calculate()">
+            Calculate & Compare Options
+        </button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Calculating your loan payoff scenarios...</p>
+        </div>
+
+        <div class="results-section" id="results-section">
+            <div class="comparison-container" id="comparison-container">
+                <!-- Comparison results will be populated here -->
             </div>
-
-            <div class="table-container" id="classic-table-container" style="display: none;">
-                <table id="classicResultTable">
+            
+            <div class="table-container" id="table-container">
+                <table id="resultTable">
                     <thead>
                         <tr>
+                            <th>Option</th>
                             <th>Month #</th>
                             <th>Month</th>
                             <th>Year</th>
@@ -680,301 +540,11 @@
                 </table>
             </div>
         </div>
-
-        <!-- Advanced Calculator (Visible by default) -->
-        <div class="calculator-view" id="advanced-calculator">
-            <div class="header">
-                <h1>Home Loan Prepayment Calculator V2.0</h1>
-                <p>Calculate and compare multiple payment strategies</p>
-            </div>
-
-            <!-- Loan Details Section -->
-            <div class="loan-details-section">
-                <h3>📊 Loan Details</h3>
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label for="loan-amount">Loan Amount (₹)</label>
-                        <input type="number" id="loan-amount" required value="1960830" min="0" step="1000">
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="interest-rate">Interest Rate (%)</label>
-                        <input type="number" id="interest-rate" step="0.01" required value="7.7" min="0" max="20">
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="start-date">Start Date</label>
-                        <input type="date" id="start-date" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="loan-term">Loan Term (months)</label>
-                        <input type="number" id="loan-term" required value="189" min="1" max="600">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Payment Options Section -->
-            <div class="payment-options-section">
-                <div id="payment-options-container">
-                    <!-- Payment options will be dynamically added here -->
-                </div>
-                
-                <button class="add-option-btn" onclick="addPaymentOption()">
-                    ➕ Add Payment Option
-                </button>
-            </div>
-
-            <button class="calculate-btn" onclick="calculate()">
-                Calculate & Compare Options
-            </button>
-
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Calculating your loan payoff scenarios...</p>
-            </div>
-
-            <div class="results-section" id="results-section">
-                <div class="comparison-container" id="comparison-container">
-                    <!-- Comparison results will be populated here -->
-                </div>
-                
-                <div class="table-container" id="table-container">
-                    <table id="resultTable">
-                        <thead>
-                            <tr>
-                                <th>Option</th>
-                                <th>Month #</th>
-                                <th>Month</th>
-                                <th>Year</th>
-                                <th>Total Payment</th>
-                                <th>Interest Paid</th>
-                                <th>Principal Paid</th>
-                                <th>Remaining Balance</th>
-                                <th>Total Paid</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Dynamic content goes here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
         document.getElementById("start-date").valueAsDate = new Date();
         let paymentOptionCounter = 0;
-        let classicChart;
-
-        // Navigation functions
-        function switchToClassic() {
-            document.getElementById('classic-calculator').style.display = 'block';
-            document.getElementById('advanced-calculator').style.display = 'none';
-            document.getElementById('classic-btn').classList.add('active');
-            document.getElementById('advanced-btn').classList.remove('active');
-            
-            // Set classic start date
-            document.getElementById("classic-start-date").valueAsDate = new Date();
-        }
-
-        function switchToAdvanced() {
-            document.getElementById('classic-calculator').style.display = 'none';
-            document.getElementById('advanced-calculator').style.display = 'block';
-            document.getElementById('classic-btn').classList.remove('active');
-            document.getElementById('advanced-btn').classList.add('active');
-        }
-
-        // Classic Calculator Functions
-        function calculateClassic() {
-            const parseFloatAbs = (value) => {
-                const parsed = parseFloat(value);
-                return isNaN(parsed) ? 0 : Math.abs(parsed);
-            };
-
-            const parseIntAbs = (value) => {
-                const parsed = parseInt(value);
-                return isNaN(parsed) ? 0 : Math.abs(parsed);
-            };
-
-            const loanAmount = parseFloatAbs(document.getElementById("classic-loan-amount").value);
-            const annualInterestRate = parseFloatAbs(document.getElementById("classic-interest-rate").value) / 100;
-            const dailyInterestRate = annualInterestRate / 365;
-            const loanTerm = parseIntAbs(document.getElementById("classic-loan-term").value);
-            const monthlyPayment = parseFloatAbs(document.getElementById("classic-monthly-payment").value);
-            let extraPayment = parseFloatAbs(document.getElementById("classic-extra-payment").value);
-            let yearlyIncrement = parseFloatAbs(document.getElementById("classic-yearly-increment").value);
-            let yearlyExtraPayment = parseFloatAbs(document.getElementById("classic-yearly-extra-payment").value);
-
-            const startDateInput = document.getElementById("classic-start-date").value;
-            const startDate = startDateInput ? new Date(startDateInput) : new Date();
-
-            // Validation
-            if(loanTerm === 0) {
-                alert("Please ensure loan term is not zero");
-                return;
-            }
-
-            if(loanAmount === 0) {
-                alert("Please ensure loan amount is not zero");
-                return;
-            }
-
-            if(monthlyPayment === 0 && extraPayment === 0 && yearlyIncrement === 0 && yearlyExtraPayment === 0) {
-                alert("Please ensure at least one payment value is greater than zero");
-                return;
-            }
-
-            let loanBalance = loanAmount;
-            let months = 0;
-            let totalPaid = 0;
-            let currentYear = 0;
-
-            const resultTableBody = document.getElementById("classicResultTable").getElementsByTagName("tbody")[0];
-            resultTableBody.innerHTML = "";
-
-            let currentDate = new Date(startDate);
-
-            const monthlyEmi = loanAmount * (annualInterestRate/12) * 
-                (Math.pow(1 + (annualInterestRate/12), loanTerm) /
-                (Math.pow(1 + (annualInterestRate/12), loanTerm) - 1));
-
-            const monthNames = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-
-            let totalInterestPaid = 0;
-            let totalPrincipalPaid = 0;
-
-            while (loanBalance > 0) {
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth();
-                const monthName = monthNames[month];
-
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-                const dailyInterest = loanBalance * dailyInterestRate;
-                const monthlyInterest = dailyInterest * daysInMonth;
-
-                if (monthName === "January") {
-                    extraPayment += yearlyIncrement;
-                }
-
-                let totalPayment = monthlyPayment + extraPayment;
-                let principalPayment = totalPayment - monthlyInterest;
-                loanBalance -= principalPayment;
-                months++;
-
-                if (monthName === "January") {
-                    loanBalance -= yearlyExtraPayment;
-                    totalPayment += yearlyExtraPayment;
-                }
-
-                if (months % 12 === 1) {
-                    currentYear++;
-                }
-
-                if(loanBalance < 0) {
-                    totalPayment += loanBalance;
-                    principalPayment += loanBalance;
-                    loanBalance = 0;
-                }
-
-                totalPaid += totalPayment;
-                totalPrincipalPaid += principalPayment;
-                totalInterestPaid += monthlyInterest;
-
-                // Create table row
-                const row = resultTableBody.insertRow();
-                row.insertCell(0).innerHTML = `<span class="currency">${months}</span>`;
-                row.insertCell(1).innerText = monthName;
-                row.insertCell(2).innerText = year;
-                row.insertCell(3).innerHTML = `<span class="currency">${formatCurrency(totalPayment)}</span>`;
-                row.insertCell(4).innerHTML = `<span class="currency">${formatCurrency(monthlyInterest)}</span>`;
-                row.insertCell(5).innerHTML = `<span class="currency">${formatCurrency(principalPayment)}</span>`;
-                row.insertCell(6).innerHTML = `<span class="currency">${formatCurrency(loanBalance)}</span>`;
-                row.insertCell(7).innerHTML = `<span class="currency">${formatCurrency(totalPaid)}</span>`;
-
-                currentDate.setMonth(currentDate.getMonth() + 1);
-            }
-
-            // Update results summary
-            const resultSummary = document.getElementById("classic-result-summary");
-            const yearWord = getWords(months);
-            const interestSavings = (monthlyEmi * loanTerm) - totalPaid;
-
-            resultSummary.innerHTML = `
-                <h3>🎉 Loan Payoff Summary</h3>
-                <div class="result-item">
-                    <span class="result-label">Payoff Time:</span>
-                    <span class="result-value">${months} months (${yearWord})</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Regular Monthly EMI:</span>
-                    <span class="result-value emi-value">${formatCurrency(monthlyEmi)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Total Interest Paid:</span>
-                    <span class="result-value emi-value">${formatCurrency(totalInterestPaid)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Total Amount Paid:</span>
-                    <span class="result-value emi-value">${formatCurrency(totalPaid)}</span>
-                </div>
-                ${interestSavings > 0 ? `
-                <div class="result-item">
-                    <span class="result-label">Interest Savings:</span>
-                    <span class="result-value savings-value">${formatCurrency(interestSavings)}</span>
-                </div>
-                ` : ''}
-            `;
-
-            // Update pie chart
-            if (classicChart) {
-                classicChart.destroy();
-            }
-
-            const ctx = document.getElementById('classicLoanPieChart').getContext('2d');
-            classicChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Total Interest Paid', 'Total Principal Paid'],
-                    datasets: [{
-                        data: [totalInterestPaid, totalPrincipalPaid],
-                        backgroundColor: ['#ef4444', '#10b981'],
-                        borderWidth: 0,
-                        cutout: '60%'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 12,
-                                    weight: '500'
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + formatCurrency(context.parsed);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            document.getElementById('classic-results-section').style.display = 'grid';
-            document.getElementById('classic-table-container').style.display = 'block';
-        }
 
         function formatCurrency(amount) {
             return new Intl.NumberFormat('en-IN', {
