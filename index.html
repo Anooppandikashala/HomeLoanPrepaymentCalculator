@@ -62,7 +62,7 @@
         }
 
         .nav-container {
-            max-width: 1400px;
+            max-width: 1100px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -120,7 +120,7 @@
         }
 
         .calculator-container {
-            max-width: 1400px;
+            max-width: 1000px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -606,10 +606,10 @@
                 <h2>🏠 Home Loan Calculator</h2>
             </div>
             <div class="nav-buttons">
-                <button class="nav-btn" id="classic-btn" onclick="switchToClassic()">
+                <button class="nav-btn active" id="classic-btn" onclick="switchToClassic()">
                     📊 Classic Calculator
                 </button>
-                <button class="nav-btn active" id="advanced-btn" onclick="switchToAdvanced()">
+                <button class="nav-btn" id="advanced-btn" onclick="switchToAdvanced()">
                     🚀 Advanced Calculator
                 </button>
             </div>
@@ -618,7 +618,7 @@
 
     <div class="calculator-container">
         <!-- Classic Calculator (Hidden by default) -->
-        <div class="calculator-view" id="classic-calculator" style="display: none;">
+        <div class="calculator-view" id="classic-calculator">
             <div class="header">
                 <h1>Home Loan Prepayment Calculator V1.0</h1>
                 <p>Calculate your savings and payoff timeline with prepayments</p>
@@ -702,7 +702,7 @@
         </div>
 
         <!-- Advanced Calculator (Visible by default) -->
-        <div class="calculator-view" id="advanced-calculator">
+        <div class="calculator-view" id="advanced-calculator" style="display: none;">
             <div class="header">
                 <h1>Home Loan Prepayment Calculator V2.0</h1>
                 <p>Calculate and compare multiple payment strategies</p>
