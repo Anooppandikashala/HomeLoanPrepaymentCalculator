@@ -326,6 +326,11 @@
             font-size: 0.9rem;
         }
 
+        .label-1
+        {
+            font-size: 0.7rem !important;
+        }
+
         .input-group input {
             width: 100%;
             padding: 12px 14px;
@@ -1038,22 +1043,22 @@
                 </div>
                 <div class="payment-grid">
                     <div class="input-group">
-                        <label for="monthly-payment-${paymentOptionCounter}">Current Monthly Payment (₹)</label>
+                        <label class="label-1"  for="monthly-payment-${paymentOptionCounter}">Current Monthly Payment (₹)</label>
                         <input type="number" id="monthly-payment-${paymentOptionCounter}" value="35000" min="0" step="100">
                     </div>
                     
                     <div class="input-group">
-                        <label for="extra-payment-${paymentOptionCounter}">Extra Monthly Payment (₹)</label>
+                        <label class="label-1"  for="extra-payment-${paymentOptionCounter}">Extra Monthly Payment (₹)</label>
                         <input type="number" id="extra-payment-${paymentOptionCounter}" value="${paymentOptionCounter === 1 ? '0' : '5000'}" min="0" step="100">
                     </div>
                     
                     <div class="input-group">
-                        <label for="yearly-increment-${paymentOptionCounter}">Yearly Extra Payment Increment (₹)</label>
+                        <label class="label-1"  for="yearly-increment-${paymentOptionCounter}">Yearly Extra Payment Increment (₹)</label>
                         <input type="number" id="yearly-increment-${paymentOptionCounter}" value="${paymentOptionCounter === 1 ? '2500' : '5000'}" min="0" step="100">
                     </div>
                     
                     <div class="input-group">
-                        <label for="yearly-extra-payment-${paymentOptionCounter}">Yearly Lumpsum Amount (₹)</label>
+                        <label class="label-1"  for="yearly-extra-payment-${paymentOptionCounter}">Yearly Lumpsum Amount (₹)</label>
                         <input type="number" id="yearly-extra-payment-${paymentOptionCounter}" value="${paymentOptionCounter === 1 ? '0' : '50000'}" min="0" step="1000">
                     </div>
                 </div>
