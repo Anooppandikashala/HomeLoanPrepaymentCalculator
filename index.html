@@ -36,6 +36,24 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --surface: #ffffff;
+            --surface-2: #f8fafc;
+            --surface-3: #f1f5f9;
+            --border: #e2e8f0;
+            --text-1: #0f172a;
+            --text-2: #334155;
+            --text-3: #64748b;
+            --green: #059669;
+            --red: #dc2626;
+            --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+            --shadow-lg: 0 20px 60px rgba(15,23,42,.18);
+            --radius: 10px;
+            --radius-lg: 16px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -44,379 +62,468 @@
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             min-height: 100vh;
-            padding: 0;
-            color: #333;
+            color: var(--text-2);
         }
 
+        /* ── NAV ── */
         .top-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 16px 0;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .nav-container {
-            max-width: 1100px;
+            max-width: 1080px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 40px;
+            padding: 0 32px;
+        }
+
+        .nav-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-logo {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nav-logo svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
         }
 
         .nav-title h2 {
-            font-size: 1.5rem;
+            font-size: 1rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
+            color: var(--text-1);
+            letter-spacing: -0.02em;
         }
 
         .nav-buttons {
             display: flex;
-            gap: 12px;
+            gap: 3px;
+            background: var(--surface-3);
+            border-radius: 10px;
+            padding: 3px;
         }
 
         .nav-btn {
-            padding: 10px 20px;
-            border: 2px solid #e5e7eb;
-            border-radius: 25px;
-            background: white;
-            color: #6b7280;
+            padding: 7px 18px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-3);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
         }
 
         .nav-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            color: var(--text-1);
+            background: rgba(255,255,255,0.6);
         }
 
         .nav-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
         }
 
-        .nav-btn.active:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
+        /* ── CARD ── */
         .calculator-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            animation: slideUp 0.6s ease-out;
+            max-width: 1080px;
+            margin: 24px auto 48px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 40px 48px;
+            animation: fadeUp 0.45s ease-out;
         }
 
         .calculator-view {
             width: 100%;
         }
 
-        .classic-form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        .classic-results-section {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 32px;
-            margin: 32px 0;
-            align-items: start;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        /* ── HEADERS ── */
         .header {
-            text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .header h1 {
-            font-size: 2.0rem;
+            font-size: 1.55rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            color: var(--text-1);
+            letter-spacing: -0.03em;
+            margin-bottom: 5px;
         }
 
         .header p {
-            color: #6b7280;
-            font-size: 1.1rem;
+            color: var(--text-3);
+            font-size: 0.95rem;
         }
 
+        /* ── FIELD SECTIONS ── */
         .loan-details-section {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 32px;
-            border: 1px solid #e2e8f0;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 24px;
         }
 
         .loan-details-section h3 {
-            color: #1e293b;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-3);
+            margin-bottom: 18px;
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 16px;
+        }
+
+        .classic-form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
             margin-bottom: 24px;
         }
 
+        .classic-results-section {
+            display: grid;
+            grid-template-columns: 1fr 230px;
+            gap: 28px;
+            margin: 32px 0;
+            align-items: start;
+        }
+
+        /* ── INPUTS ── */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-2);
+        }
+
+        .label-1 {
+            font-size: 0.78rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-prefix,
+        .input-suffix {
+            position: absolute;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-3);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .input-prefix { left: 11px; }
+        .input-suffix { right: 11px; }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: var(--text-1);
+            background: white;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+
+        .input-group input.has-prefix { padding-left: 26px; }
+        .input-group input.has-suffix { padding-right: 28px; }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+        }
+
+        /* ── PAYMENT OPTIONS ── */
         .payment-options-section {
-            margin-bottom: 32px;
+            margin-bottom: 24px;
+        }
+
+        .options-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 14px;
         }
 
         .payment-option {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            background: var(--surface-2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 22px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s, background 0.2s;
             position: relative;
         }
 
         .payment-option.active {
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            border-color: #c7d2fe;
+            background: white;
         }
 
         .payment-option-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .payment-option-title {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .payment-option-title h4 {
-            color: #1e293b;
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .option-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .option-toggle {
             position: relative;
-            width: 50px;
-            height: 26px;
-            background: #e5e7eb;
-            border-radius: 13px;
+            width: 40px;
+            height: 22px;
+            background: var(--border);
+            border-radius: 11px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background 0.2s;
+            flex-shrink: 0;
         }
 
         .option-toggle.active {
-            background: #667eea;
+            background: var(--primary);
         }
 
         .option-toggle::after {
             content: '';
             position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 22px;
-            height: 22px;
+            top: 3px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
             background: white;
             border-radius: 50%;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,.2);
         }
 
         .option-toggle.active::after {
-            transform: translateX(24px);
+            transform: translateX(18px);
         }
 
         .payment-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 16px;
         }
 
         .remove-option-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            background: none;
+            color: var(--text-3);
+            border: 1.5px solid var(--border);
+            padding: 5px 13px;
+            border-radius: 7px;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.18s;
         }
 
         .remove-option-btn:hover {
-            background: #dc2626;
-            transform: translateY(-1px);
+            color: var(--red);
+            border-color: #fca5a5;
+            background: #fff5f5;
         }
 
         .add-option-btn {
-            width: fit-content;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            float: right;
-            padding: 12px 24px;
-            font-size: 1rem;
+            background: white;
+            color: var(--primary);
+            border: 1.5px dashed #a5b4fc;
+            padding: 9px 20px;
+            font-size: 0.875rem;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: var(--radius);
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 24px;
+            font-family: inherit;
+            transition: all 0.18s;
         }
 
         .add-option-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            background: #eef2ff;
+            border-color: var(--primary);
+            border-style: solid;
         }
 
-        .input-group {
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .label-1
-        {
-            font-size: 0.7rem !important;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-1px);
-        }
-
+        /* ── CALCULATE BUTTON ── */
         .calculate-btn {
             width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
             color: white;
             border: none;
-            padding: 16px 32px;
-            font-size: 1.1rem;
+            padding: 14px 32px;
+            font-size: 0.975rem;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: var(--radius);
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 24px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            font-family: inherit;
+            letter-spacing: 0.01em;
+            margin: 8px 0;
         }
 
         .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(79,70,229,.35);
         }
 
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ── LOADING ── */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 34px;
+            height: 34px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        .loading p {
+            color: var(--text-3);
+            font-size: 0.9rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ── RESULTS – ADVANCED ── */
         .results-section {
             display: none;
-            margin: 32px 0;
+            margin-top: 36px;
         }
 
         .comparison-container {
-            display: grid;
-            gap: 24px;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
+        }
+
+        .comparison-container > h3 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-3);
+            margin-bottom: 16px;
         }
 
         .comparison-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
         }
 
         .result-card {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
+            background: var(--surface-2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
             position: relative;
         }
 
         .result-card.best-option {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-color: #6ee7b7;
+            background: #f0fdf4;
         }
 
         .best-badge {
             position: absolute;
-            top: -8px;
-            right: 16px;
-            background: #10b981;
+            top: -10px;
+            right: 14px;
+            background: var(--green);
             color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 3px 11px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
 
         .result-card h4 {
-            color: #1e293b;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 12px;
         }
 
         .result-item {
@@ -424,7 +531,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 0;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
         }
 
         .result-item:last-child {
@@ -432,192 +539,149 @@
         }
 
         .result-label {
-            color: #64748b;
+            color: var(--text-3);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .result-value {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-1);
         }
 
-        .emi-value {
-            color: #dc2626;
+        .emi-value  { color: var(--text-1); }
+        .savings-value { color: var(--green); }
+
+        /* ── RESULTS – CLASSIC ── */
+        .result-summary h3 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-3);
+            margin-bottom: 12px;
         }
 
-        .savings-value {
-            color: #059669;
+        .chart-container {
+            width: 230px;
+            height: 230px;
+            flex-shrink: 0;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 32px;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #e5e7eb;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* ── TABLE ── */
         .table-container {
-            margin-top: 32px;
+            margin-top: 28px;
             overflow-x: auto;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 700px;
             background: white;
-            min-width: 800px;
         }
 
         th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px;
+            background: var(--surface-3);
+            color: var(--text-2);
+            padding: 11px 14px;
             text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border);
         }
 
         td {
-            padding: 12px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.9rem;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--surface-3);
+            font-size: 0.875rem;
+            color: var(--text-2);
         }
 
-        tbody tr:nth-child(even) {
-            background-color: #f8fafc;
+        tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        tbody tr:hover {
-            background-color: #e0f2fe;
-            transform: scale(1.01);
-            transition: all 0.2s ease;
+        tbody tr:hover td {
+            background-color: #eef2ff;
+            transition: background 0.15s;
         }
 
         .currency {
             font-weight: 600;
-            color: #1e293b;
+            color: var(--text-1);
+            font-variant-numeric: tabular-nums;
         }
 
-        /* Mobile Responsive */
+        /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
-            .form-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
+            .form-grid,
+            .classic-form-grid,
             .payment-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .classic-form-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
             .nav-container {
-                padding: 0 20px;
+                padding: 0 16px;
                 flex-direction: column;
-                gap: 16px;
-            }
-
-            .nav-title h2 {
-                font-size: 1.3rem;
-            }
-
-            .nav-buttons {
-                width: 100%;
-                justify-content: center;
+                gap: 10px;
             }
 
             .calculator-container {
-                padding: 24px;
-                border-radius: 16px;
-                margin-top: 10px;
-                margin-bottom: 10px;
+                padding: 24px 20px;
+                border-radius: 12px;
+                margin: 16px auto 32px;
             }
 
-            .header h1 {
-                font-size: 1.5rem;
-            }
+            .header h1 { font-size: 1.3rem; }
 
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
+            .form-grid,
+            .classic-form-grid,
             .payment-grid {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 14px;
+            }
+
+            .classic-results-section {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                width: 200px;
+                height: 200px;
+                margin: 0 auto;
             }
 
             .comparison-grid {
                 grid-template-columns: 1fr;
             }
-
-            .classic-form-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .classic-results-section {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
         }
 
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.2rem;
-            }
-
-            .payment-option {
-                padding: 16px;
-            }
-
-            .input-group input {
-                padding: 10px;
-            }
-
-            .calculate-btn {
-                padding: 14px 24px;
-                font-size: 1rem;
-            }
+            .calculator-container { padding: 18px 14px; }
+            .nav-title h2 { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
     <div class="top-nav">
         <div class="nav-container">
             <div class="nav-title">
-                <h2>🏠 Home Loan Calculator</h2>
+                <div class="nav-logo">
+                    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                </div>
+                <h2>Home Loan Calculator</h2>
             </div>
             <div class="nav-buttons">
-                <button class="nav-btn active" id="classic-btn" onclick="switchToClassic()">
-                    📊 Classic Calculator
-                </button>
-                <button class="nav-btn" id="advanced-btn" onclick="switchToAdvanced()">
-                    🚀 Advanced Calculator
-                </button>
+                <button class="nav-btn active" id="classic-btn" onclick="switchToClassic()">Calculator</button>
+                <button class="nav-btn" id="advanced-btn" onclick="switchToAdvanced()">Compare</button>
             </div>
         </div>
     </div>
@@ -626,55 +690,76 @@
         <!-- Classic Calculator (Visible by default) -->
         <div class="calculator-view" id="classic-calculator">
             <div class="header">
-                <h1>Home Loan Prepayment Calculator V1.0</h1>
+                <h1>Loan Payoff Calculator</h1>
                 <p>Calculate your savings and payoff timeline with prepayments</p>
             </div>
 
             <div class="classic-form-grid">
                 <div class="input-group">
-                    <label for="classic-loan-amount">Loan Amount (₹)</label>
-                    <input type="number" id="classic-loan-amount" required value="1822137" min="0" step="1000">
+                    <label for="classic-loan-amount">Loan Amount</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">₹</span>
+                        <input type="number" id="classic-loan-amount" class="has-prefix" required value="1725086" min="0" step="1000">
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
-                    <label for="classic-interest-rate">Interest Rate (%)</label>
-                    <input type="number" id="classic-interest-rate" step="0.01" required value="7.45" min="0" max="20">
+                    <label for="classic-interest-rate">Interest Rate</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="classic-interest-rate" class="has-suffix" step="0.01" required value="7.45" min="0" max="20">
+                        <span class="input-suffix">%</span>
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="classic-start-date">Start Date</label>
-                    <input type="date" id="classic-start-date" required>
+                    <div class="input-wrapper">
+                        <input type="date" id="classic-start-date" required>
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="classic-loan-term">Loan Term (months)</label>
-                    <input type="number" id="classic-loan-term" required value="184" min="1" max="600">
+                    <div class="input-wrapper">
+                        <input type="number" id="classic-loan-term" class="has-suffix" required value="182" min="1" max="600">
+                        <span class="input-suffix">mo</span>
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
-                    <label for="classic-monthly-payment">Current Monthly Payment (₹)</label>
-                    <input type="number" id="classic-monthly-payment" required value="37500" min="0" step="100">
+                    <label for="classic-monthly-payment">Monthly Payment</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">₹</span>
+                        <input type="number" id="classic-monthly-payment" class="has-prefix" required value="37500" min="0" step="100">
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
-                    <label for="classic-extra-payment">Extra Monthly Payment (₹)</label>
-                    <input type="number" id="classic-extra-payment" value="0" min="0" step="100">
+                    <label for="classic-extra-payment">Extra Monthly Payment</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">₹</span>
+                        <input type="number" id="classic-extra-payment" class="has-prefix" value="0" min="0" step="100">
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
-                    <label for="classic-yearly-increment">Yearly Extra Payment Increment (₹)</label>
-                    <input type="number" id="classic-yearly-increment" value="2500" min="0" step="100">
+                    <label for="classic-yearly-increment">Yearly Increment</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">₹</span>
+                        <input type="number" id="classic-yearly-increment" class="has-prefix" value="2500" min="0" step="100">
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
-                    <label for="classic-yearly-extra-payment">Yearly Lumpsum Amount (₹)</label>
-                    <input type="number" id="classic-yearly-extra-payment" value="0" min="0" step="1000">
+                    <label for="classic-yearly-extra-payment">Yearly Lump Sum</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">₹</span>
+                        <input type="number" id="classic-yearly-extra-payment" class="has-prefix" value="0" min="0" step="1000">
+                    </div>
                 </div>
             </div>
 
-            <button class="calculate-btn" onclick="calculateClassic()">
-                Calculate Loan Payoff
-            </button>
+            <button class="calculate-btn" onclick="calculateClassic()">Calculate Loan Payoff</button>
 
             <div class="classic-results-section" id="classic-results-section" style="display: none;">
                 <div class="result-summary" id="classic-result-summary">
@@ -710,32 +795,43 @@
         <!-- Advanced Calculator (Hidden by default) -->
         <div class="calculator-view" id="advanced-calculator" style="display: none;">
             <div class="header">
-                <h1>Home Loan Prepayment Calculator V2.0</h1>
-                <p>Calculate and compare multiple payment strategies</p>
+                <h1>Compare Payment Scenarios</h1>
+                <p>Add multiple strategies and find the most cost-effective payoff plan</p>
             </div>
 
             <!-- Loan Details Section -->
             <div class="loan-details-section">
-                <h3>📊 Loan Details</h3>
+                <h3>Loan Details</h3>
                 <div class="form-grid">
                     <div class="input-group">
-                        <label for="loan-amount">Loan Amount (₹)</label>
-                        <input type="number" id="loan-amount" required value="1822137" min="0" step="1000">
+                        <label for="loan-amount">Loan Amount</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="loan-amount" class="has-prefix" required value="1725086" min="0" step="1000">
+                        </div>
                     </div>
-                    
+
                     <div class="input-group">
-                        <label for="interest-rate">Interest Rate (%)</label>
-                        <input type="number" id="interest-rate" step="0.01" required value="7.45" min="0" max="20">
+                        <label for="interest-rate">Interest Rate</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="interest-rate" class="has-suffix" step="0.01" required value="7.45" min="0" max="20">
+                            <span class="input-suffix">%</span>
+                        </div>
                     </div>
-                    
+
                     <div class="input-group">
                         <label for="start-date">Start Date</label>
-                        <input type="date" id="start-date" required>
+                        <div class="input-wrapper">
+                            <input type="date" id="start-date" required>
+                        </div>
                     </div>
-                    
+
                     <div class="input-group">
                         <label for="loan-term">Loan Term (months)</label>
-                        <input type="number" id="loan-term" required value="184" min="1" max="600">
+                        <div class="input-wrapper">
+                            <input type="number" id="loan-term" class="has-suffix" required value="182" min="1" max="600">
+                            <span class="input-suffix">mo</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -745,10 +841,9 @@
                 <div id="payment-options-container">
                     <!-- Payment options will be dynamically added here -->
                 </div>
-                
-                <button class="add-option-btn" onclick="addPaymentOption()">
-                    ✚ Add Payment Option
-                </button>
+                <div class="options-toolbar">
+                    <button class="add-option-btn" onclick="addPaymentOption()">+ Add Payment Scenario</button>
+                </div>
             </div>
 
             <button class="calculate-btn" onclick="calculate()">
@@ -931,7 +1026,7 @@
             const interestSavings = (monthlyEmi * loanTerm) - totalPaid;
 
             resultSummary.innerHTML = `
-                <h3>🎉 Loan Payoff Summary</h3>
+                <h3>Loan Payoff Summary</h3>
                 <div class="result-item">
                     <span class="result-label">Payoff Time:</span>
                     <span class="result-value">${months} months (${yearWord})</span>
@@ -1036,30 +1131,41 @@
             optionDiv.innerHTML = `
                 <div class="payment-option-header">
                     <div class="payment-option-title">
-                        <h4>💰 Payment Option ${paymentOptionCounter}</h4>
-                        <div class="option-toggle active" onclick="toggleOption(${paymentOptionCounter})"></div>
+                        <h4>Scenario ${paymentOptionCounter}</h4>
                     </div>
-                    ${paymentOptionCounter > 1 ? `<button class="remove-option-btn" onclick="removePaymentOption(${paymentOptionCounter})">Remove</button>` : ''}
+                    <div class="option-controls">
+                        <div class="option-toggle active" onclick="toggleOption(${paymentOptionCounter})"></div>
+                        ${paymentOptionCounter > 1 ? `<button class="remove-option-btn" onclick="removePaymentOption(${paymentOptionCounter})">Remove</button>` : ''}
+                    </div>
                 </div>
                 <div class="payment-grid">
                     <div class="input-group">
-                        <label class="label-1"  for="monthly-payment-${paymentOptionCounter}">Current Monthly Payment (₹)</label>
-                        <input type="number" id="monthly-payment-${paymentOptionCounter}" value="35000" min="0" step="100">
+                        <label class="label-1" for="monthly-payment-${paymentOptionCounter}">Monthly Payment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="monthly-payment-${paymentOptionCounter}" class="has-prefix" value="35000" min="0" step="100">
+                        </div>
                     </div>
-                    
                     <div class="input-group">
-                        <label class="label-1"  for="extra-payment-${paymentOptionCounter}">Extra Monthly Payment (₹)</label>
-                        <input type="number" id="extra-payment-${paymentOptionCounter}" value="${paymentOptionCounter === 1 ? '0' : '5000'}" min="0" step="100">
+                        <label class="label-1" for="extra-payment-${paymentOptionCounter}">Extra Payment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="extra-payment-${paymentOptionCounter}" class="has-prefix" value="${paymentOptionCounter === 1 ? '0' : '5000'}" min="0" step="100">
+                        </div>
                     </div>
-                    
                     <div class="input-group">
-                        <label class="label-1"  for="yearly-increment-${paymentOptionCounter}">Yearly Extra Payment Increment (₹)</label>
-                        <input type="number" id="yearly-increment-${paymentOptionCounter}" value="${paymentOptionCounter === 1 ? '2500' : '5000'}" min="0" step="100">
+                        <label class="label-1" for="yearly-increment-${paymentOptionCounter}">Yearly Increment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="yearly-increment-${paymentOptionCounter}" class="has-prefix" value="${paymentOptionCounter === 1 ? '2500' : '5000'}" min="0" step="100">
+                        </div>
                     </div>
-                    
                     <div class="input-group">
-                        <label class="label-1"  for="yearly-extra-payment-${paymentOptionCounter}">Yearly Lumpsum Amount (₹)</label>
-                        <input type="number" id="yearly-extra-payment-${paymentOptionCounter}" value="${paymentOptionCounter === 1 ? '0' : '50000'}" min="0" step="1000">
+                        <label class="label-1" for="yearly-extra-payment-${paymentOptionCounter}">Yearly Lump Sum</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="yearly-extra-payment-${paymentOptionCounter}" class="has-prefix" value="${paymentOptionCounter === 1 ? '0' : '50000'}" min="0" step="1000">
+                        </div>
                     </div>
                 </div>
             `;
@@ -1274,7 +1380,7 @@
         function displayComparisonResults(results, bestOption, monthlyEmi) {
             const container = document.getElementById('comparison-container');
             
-            let comparisonHTML = '<h3>📊 Payment Options Comparison</h3><div class="comparison-grid">';
+            let comparisonHTML = '<h3>Comparison</h3><div class="comparison-grid">';
             
             results.forEach(result => {
                 const isBest = result.id === bestOption.id;
@@ -1283,7 +1389,7 @@
                 comparisonHTML += `
                     <div class="result-card ${isBest ? 'best-option' : ''}">
                         ${isBest ? '<div class="best-badge">Best Option</div>' : ''}
-                        <h4>💰 ${result.name}</h4>
+                        <h4>${result.name}</h4>
                         <div class="result-item">
                             <span class="result-label">Payoff Time:</span>
                             <span class="result-value">${result.months} months (${yearWord})</span>
